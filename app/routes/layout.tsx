@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { updateToken } from "../../slices/tokenSlice";
 import { fetchUser, updateUser } from "../../slices/userSlice";
 import axios from "axios";
+import { SlActionUndo } from "react-icons/sl";
 
 const Layout = () => {
   const token = useSelector((state: RootState) => state.token.value);
@@ -38,9 +39,12 @@ const Layout = () => {
   return (
     <>
       <div className="flex flex-row justify-between px-10 py-10 bg-blue-800 items-center text-white">
-        <div>
+        <div className="space-x-10">
           <Link to="/" className="">
             Home
+          </Link>
+          <Link to="friend/index" className="">
+            Friend
           </Link>
         </div>
         {user ? (
@@ -56,6 +60,12 @@ const Layout = () => {
             <Link to="/auth/register">Register</Link>
           </div>
         )}
+      </div>
+      <div
+        className="rounded-full  w-13 h-13 flex flex-row justify-around items-center absolute right-5 hover:cursor-pointer"
+        onClick={() => navigate(-1)}
+      >
+        <SlActionUndo className="text-4xl" />
       </div>
       <Outlet />
     </>

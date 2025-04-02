@@ -8,5 +8,15 @@ export default [
     route("post/create", "./routes/post/createPost.tsx"),
     route("post/show/:post_id", "./routes/post/showPost.tsx"),
     route("post/edit/:post_id", "./routes/post/editPost.tsx"),
+
+    ...prefix("friend", [
+      layout("./routes/friend/layout.tsx", [
+        route("index", "./routes/friend/index.tsx"),
+        route("find", "./routes/friend/find.tsx"),
+        route("requests", "./routes/friend/requests.tsx"),
+      ]),
+    ]),
+
+    ...prefix("user", [route("show/:user_id", "./routes/user/show.tsx")]),
   ]),
 ] satisfies RouteConfig;
