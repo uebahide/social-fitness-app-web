@@ -1,4 +1,4 @@
-import { Link, Outlet } from "react-router";
+import { Link, Outlet, useNavigate } from "react-router";
 import { type AppDispatch, type RootState, store } from "~/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -10,6 +10,7 @@ const Layout = () => {
   const token = useSelector((state: RootState) => state.token.value);
   const user = useSelector((state: RootState) => state.user.value);
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     console.log(token);
@@ -25,6 +26,7 @@ const Layout = () => {
         localStorage.removeItem("token");
         dispatch(updateToken());
         dispatch(updateUser(null));
+        navigate("/");
       });
   };
 

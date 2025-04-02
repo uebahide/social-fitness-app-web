@@ -10,12 +10,16 @@ export const fetchUser = createAsyncThunk(
   async () => {
     const token = store.getState().token.value;
 
-    const res = await axios.get<user>(`/api/user`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return res.data;
+    if (token) {
+      const res = await axios.get<user>(`/api/user`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return res.data;
+    } else {
+      return null;
+    }
   },
 );
 
