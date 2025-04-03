@@ -37,7 +37,6 @@ export const ChatBox = () => {
     if (data.errors) {
       console.log(data.errors);
     } else {
-      setMessages(data);
       setMessage("");
     }
   };
@@ -65,7 +64,7 @@ export const ChatBox = () => {
     return () => {
       window.Echo.leave(chat_id);
     };
-  }, [token, chat_id]);
+  }, [token]);
 
   return (
     <div className="h-screen">
