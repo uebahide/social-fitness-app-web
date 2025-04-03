@@ -3,25 +3,11 @@ import type { user } from "../../../types/user";
 import { useSelector } from "react-redux";
 import type { RootState } from "~/store";
 import { Link } from "react-router";
+import { useFriend } from "../../../hooks/useFriend";
 
 const Requests = () => {
-  const [requesters, setRequesters] = useState<user[]>([]);
+  const { fetchRequesters, requesters } = useFriend();
   const token = useSelector((state: RootState) => state.token.value);
-
-  const fetchRequesters = async () => {
-    const res = await fetch(`/api/requesters`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await res.json();
-    if (data.errors) {
-      console.log(data.errors);
-    } else {
-      setRequesters(data);
-    }
-  };
 
   useEffect(() => {
     fetchRequesters();

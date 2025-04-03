@@ -1,17 +1,24 @@
-import { useEffect, useState } from "react";
-import type { user } from "../../../types/user";
+import { useEffect } from "react";
+import { useFriend } from "../../../hooks/useFriend";
+import { Link } from "react-router";
 import { useSelector } from "react-redux";
 import type { RootState } from "~/store";
-import { Link } from "react-router";
-import { useFriend } from "../../../hooks/useFriend";
 
-const Friends = () => {
+export const Index = () => {
   const { fetchFriends, friends } = useFriend();
-  const token = useSelector((state: RootState) => state.token.value);
+  const user_id = useSelector((state: RootState) => state.user.value?.id);
+
+  const generateChatId = (friend_id: number) => {
+    if (user_id) {
+      return user_id < friend_id ? `chat.${user_id}_${friend_id}` : `chat.${friend_id}_${user_id}`;
+    } else {
+      return "";
+    }
+  };
 
   useEffect(() => {
     fetchFriends();
-  }, [token]);
+  }, []);
 
   return (
     <div className="flex flex-col items-center">
@@ -19,7 +26,7 @@ const Friends = () => {
         {friends.length > 0 &&
           friends.map((friend) => (
             <Link
-              to={`../../user/show/${friend.id}`}
+              to={`../../chat/${generateChatId(friend.id)}`}
               key={friend.id}
               className="border rounded-full px-2 hover:cursor-pointer"
             >
@@ -30,5 +37,4 @@ const Friends = () => {
     </div>
   );
 };
-
-export default Friends;
+export default Index;

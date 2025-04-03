@@ -18,5 +18,10 @@ export default [
     ]),
 
     ...prefix("user", [route("show/:user_id", "./routes/user/show.tsx")]),
+
+    ...prefix("chat", [
+      route("friends", "./routes/chat/index.tsx"),
+      route(":chat_id", "./routes/chat/chatBox.tsx"),
+    ]),
   ]),
 ] satisfies RouteConfig;
