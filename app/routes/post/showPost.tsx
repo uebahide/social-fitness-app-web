@@ -1,34 +1,17 @@
-import { Link, useNavigate, useParams } from "react-router";
-import { useEffect, useState } from "react";
-import type { post } from "../../../types/post";
+import { Link, useParams } from "react-router";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "~/store";
+import { usePost } from "../../../hooks/usePost";
 
 const ShowPost = () => {
   const { post_id } = useParams();
-  const [post, setPost] = useState<post | null>(null);
-  const token = useSelector((state: RootState) => state.token.value);
   const userFetchStatus = useSelector((state: RootState) => state.user.status);
   const user = useSelector((state: RootState) => state.user.value);
-
-  const fetchPost = async () => {
-    try {
-      const res = await fetch(`/api/posts/${post_id}`, {
-        method: "get",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await res.json();
-      setPost(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const { fetchPost, post } = usePost();
 
   useEffect(() => {
-    fetchPost();
+    fetchPost(post_id ?? "");
   }, []);
 
   return (

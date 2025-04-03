@@ -6,13 +6,6 @@ import { useEffect, useState } from "react";
 import type { post } from "../../types/post";
 import axios from "axios";
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
-  ];
-}
-
 export default function Home() {
   const user = useSelector((state: RootState) => state.user.value);
   const token = useSelector((state: RootState) => state.token.value);
@@ -24,7 +17,6 @@ export default function Home() {
         Authorization: `Bearer ${token}`,
       },
     });
-
     setPosts(res.data);
   };
 

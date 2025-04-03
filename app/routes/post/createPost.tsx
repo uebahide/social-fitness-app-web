@@ -1,52 +1,22 @@
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "~/store";
-import { useNavigate } from "react-router";
-import { useState } from "react";
-import { updateToken } from "../../../slices/tokenSlice";
-import { updateUser } from "../../../slices/userSlice";
+import { usePost } from "../../../hooks/usePost";
 
 const CreatePost = () => {
-  const [title, setTitle] = useState("");
-  const [amount, setAmount] = useState("");
-  const [timeHour, setTimeHour] = useState("");
-  const [timeMinute, setTimeMinute] = useState("");
-  const [errors, setErrors] = useState<{
-    title: string[];
-    amount: string[];
-    time_hour: string[];
-    time_minute: string[];
-  } | null>(null);
-
-  const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
-  const token = useSelector((state: RootState) => state.token.value);
   const user = useSelector((state: RootState) => state.user.value);
   const userFetchStatus = useSelector((state: RootState) => state.user.status);
-
-  const handleCreatePost = async (e: any) => {
-    e.preventDefault();
-    const res = await fetch("/api/posts", {
-      method: "post",
-      body: JSON.stringify({
-        title: title,
-        amount: amount,
-        time_hour: timeHour,
-        time_minute: timeMinute,
-      }),
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await res.json();
-    console.log(data);
-
-    if (data.errors) {
-      console.log(data.errors);
-      setErrors(data.errors);
-    } else {
-      navigate("/");
-    }
-  };
+  const {
+    title,
+    amount,
+    timeHour,
+    timeMinute,
+    errors,
+    setTitle,
+    setAmount,
+    setTimeHour,
+    setTimeMinute,
+    handleCreatePost,
+  } = usePost();
 
   return (
     <>

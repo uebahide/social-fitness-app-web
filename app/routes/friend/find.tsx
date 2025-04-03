@@ -3,23 +3,11 @@ import type { user } from "../../../types/user";
 import { useSelector } from "react-redux";
 import type { RootState } from "~/store";
 import { Link } from "react-router";
+import { useUser } from "../../../hooks/useUser";
 
 const Find = () => {
   const [prefix, setPrefix] = useState("");
-  const [users, setUsers] = useState<user[]>([]);
-  const token = useSelector((state: RootState) => state.token.value);
-
-  const fetchUsersByName = async (prefix: string) => {
-    const res = await fetch(`/api/users/search/${prefix}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const data = await res.json();
-    setUsers(data);
-  };
+  const { users, fetchUsersByName } = useUser();
 
   useEffect(() => {
     fetchUsersByName(prefix);

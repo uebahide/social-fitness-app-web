@@ -1,111 +1,29 @@
 import { useParams } from "react-router";
+import { useEffect, useState } from "react";
+import { useUser } from "../../../hooks/useUser";
+import { useFriend } from "../../../hooks/useFriend";
 import { useSelector } from "react-redux";
 import type { RootState } from "~/store";
-import type { user } from "../../../types/user";
-import { useEffect, useState } from "react";
 
 const Show = () => {
   const { user_id } = useParams();
-  const [friendRequestStatus, setFriendRequestStatus] = useState<string>("");
-  const [fetchedUserById, setFetchedUserById] = useState<user | null>(null);
+  const { fetchUserById, fetchedUserById } = useUser();
+  const {
+    fetchFriendRequestStatus,
+    friendRequestStatus,
+    sendFriendRequest,
+    acceptFriendRequest,
+    rejectFriendRequest,
+    unfriend,
+  } = useFriend();
+
   const token = useSelector((state: RootState) => state.token.value);
 
-  const fetchUserById = async (user_id: string) => {
-    if (user_id) {
-      const res = await fetch(`/api/users/${user_id}`, {
-        method: "get",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await res.json();
-      console.log(data);
-      setFetchedUserById(data);
-      if (data.errors) {
-        console.log(data.errors);
-      }
-    } else {
-      console.error("no user id was passed");
-    }
-  };
-
-  const fetchFriendRequestStatus = async (user_id: string) => {
-    const res = await fetch(`/api/friend/status/${user_id}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const data = await res.json();
-    setFriendRequestStatus(data.status);
-  };
-
-  const sendFriendRequest = async (user_id: string) => {
-    const res = await fetch(`/api/friend/request/${user_id}`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const data = await res.json();
-    if (data.errors) {
-      console.log(data.errors);
-    } else {
-      await fetchFriendRequestStatus(user_id);
-    }
-  };
   useEffect(() => {
     token && fetchUserById(user_id ?? "");
     token && fetchFriendRequestStatus(user_id ?? "");
     console.log(friendRequestStatus);
   }, [token]);
-
-  const acceptFriendRequest = async (user_id: string) => {
-    const res = await fetch(`/api/friend/accept/${user_id}`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await res.json();
-    if (data.errors) {
-      console.log(data.errors);
-    } else {
-      await fetchFriendRequestStatus(user_id);
-    }
-  };
-
-  const rejectFriendRequest = async (user_id: string) => {
-    const res = await fetch(`/api/friend/reject/${user_id}`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await res.json();
-    if (data.errors) {
-      console.log(data.errors);
-    } else {
-      await fetchFriendRequestStatus(user_id);
-    }
-  };
-
-  const unfriend = async (user_id: string) => {
-    const res = await fetch(`/api/friend/unfriend/${user_id}`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await res.json();
-    if (data.errors) {
-      console.log(data.errors);
-    } else {
-      await fetchFriendRequestStatus(user_id);
-    }
-  };
 
   return (
     <div className="flex flex-col items-center w-full">

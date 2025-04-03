@@ -46,6 +46,9 @@ const Layout = () => {
           <Link to="friend/index" className="">
             Friend
           </Link>
+          <Link to="chat/friends" className="">
+            Chat
+          </Link>
         </div>
         {user ? (
           <div className="space-x-10 flex flex-row">
