@@ -16,6 +16,7 @@ export const usePost = () => {
     time_minute: string[];
   } | null>(null);
   const [post, setPost] = useState<post | null>(null);
+  const [friendPosts, setFriendPost] = useState<post[]>([]);
   const token = useSelector((state: RootState) => state.token.value);
   const navigate = useNavigate();
 
@@ -103,6 +104,22 @@ export const usePost = () => {
     }
   };
 
+  const fetchFriendPosts = async (friend_id: number) => {
+    const res = await fetch(`/api/posts/friend/${friend_id}`, {
+      method: "get",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await res.json();
+    if (data.errors) {
+      setErrors(data.errors);
+    } else {
+      setFriendPost(data);
+    }
+  };
+
   return {
     title,
     amount,
@@ -115,10 +132,12 @@ export const usePost = () => {
     setTimeMinute,
     setErrors,
     post,
+    friendPosts,
 
     handleCreatePost,
     fetchPost,
     handleUpdatePost,
     handleDeletePost,
+    fetchFriendPosts,
   };
 };

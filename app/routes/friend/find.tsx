@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "~/store";
 import { Link } from "react-router";
 import { useUser } from "../../../hooks/useUser";
+import { UserEasyCard } from "../../../components/organisms/userEasyCard";
 
 const Find = () => {
   const [prefix, setPrefix] = useState("");
@@ -23,16 +24,7 @@ const Find = () => {
       />
       {/*<button className="bg-gray-700 text-white rounded-full p-2">search</button>*/}
       <div className="space-y-2 mt-5 flex flex-col">
-        {users.length > 0 &&
-          users.map((user: user) => (
-            <Link
-              to={`../../user/show/${user.id}`}
-              key={user.id}
-              className="border rounded-full px-2 hover:cursor-pointer"
-            >
-              {user.name}
-            </Link>
-          ))}
+        {users.length > 0 && users.map((user: user) => <UserEasyCard key={user.id} user={user} />)}
       </div>
     </div>
   );

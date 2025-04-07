@@ -1,19 +1,19 @@
 import { useParams } from "react-router";
-import { useEffect, useState } from "react";
-import FlatList from "flatlist-react";
+import { type FC, useEffect, useState } from "react";
 import type { message } from "../../../types/message";
-import { Message } from "../../../components/molecules/message";
-import { BsFillSendFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import type { RootState } from "~/store";
 import "../../../resources/js/echo";
+import { Message } from "../../../components/molecules/message";
+import { MessageInput } from "../../../components/molecules/messageInput";
+import type { user } from "../../../types/user";
 
 export const ChatBox = () => {
   const { chat_id } = useParams();
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<message[]>([]);
   const token = useSelector((state: RootState) => state.token.value);
-  const user_id = useSelector((state: RootState) => state.user.value?.id);
+  const [friend, setFriend] = useState<user>([]);
 
   const connectWebSocket = () => {
     window.Echo.channel(chat_id).listen("GotMessage", async (e: any) => {
@@ -67,24 +67,19 @@ export const ChatBox = () => {
   }, [token]);
 
   return (
-    <div className="h-screen">
+    <div>
       <div className="text-center  bg-blue-500 h-13">{chat_id}</div>
       <div className="flex flex-col items-center h-full">
-        <FlatList
-          list={messages}
-          renderItem={Message}
-          renderWhenEmpty={() => <div>no messages</div>}
-        />
-        <div className="absolute bottom-10 flex flex-row w-full items-center justify-center space-x-2">
-          <input
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            className="border w-1/4 h-10 rounded-md"
-          />
-          <button className="hover:cursor-pointer" onClick={handleSendMessage}>
-            <BsFillSendFill className="text-3xl" />
-          </button>
+        <div className="h-[650px] w-[50%] border-gray-500 border-1 overflow-auto">
+          {messages.map((message) => (
+            <Message message={message} key={message.id} />
+          ))}
         </div>
+        <MessageInput
+          message={message}
+          setMessage={setMessage}
+          handleSendMessage={handleSendMessage}
+        />
       </div>
     </div>
   );
